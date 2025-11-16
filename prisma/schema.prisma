@@ -1,0 +1,69 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Claim {
+  id                String   @id @default(cuid())
+  osiguranik        String
+  radnaJedinica     String
+  vrsta             String
+  kategorija        String
+  objekat           String
+  bpg               String
+  hid               String
+  brojPolise        String
+  datumPocetka      DateTime
+  datumIsteka       DateTime
+  brojUseljenih     Int
+  datumUseljenja    DateTime?
+  vrstaStete        String
+  uzrokStete        String
+  veterinar         String
+  brojLicence       String
+  prijavaOd         DateTime
+  prijavaDo         DateTime
+  status            ClaimStatus @default(U_RADU)
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+  
+  // Relations
+  dailyRecords      DailyRecord[]
+  
+  @@map("claims")
+}
+
+model DailyRecord {
+  id          String   @id @default(cuid())
+  claimId     String
+  datum       DateTime
+  brojnoStanje Int
+  uginulo     Int
+  dijagnoza   String
+  terapija    String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  // Relations
+  claim       Claim    @relation(fields: [claimId], references: [id], onDelete: Cascade)
+  
+  @@map("daily_records")
+}
+
+enum ClaimStatus {
+  U_RADU      // In progress - editable by client
+  PODNETA     // Submitted via email - not editable by client
+  U_OBRADI    // Processing - admin only
+  ODOBRENA    // Approved - admin only
+  ODBIJENA    // Rejected - admin only
+}
