@@ -137,8 +137,5 @@ This scaffold includes a comprehensive set of modern web development tools:
 4. **Deploy with confidence** using the production-ready setup
 
 ---
-### LICENSE
-// This file is part of Project X
-// Licensed under the MIT License
 
 Built with ❤️ for the developer community. Supercharged by [Z.ai](https://chat.z.ai) 🚀
